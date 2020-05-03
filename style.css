@@ -1,0 +1,277 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.wrapper {
+    background-color: rgb(241, 241, 241);
+    height: 100vh;
+}
+.container {
+    width: 1000px;
+    margin: 0 auto;
+    position:relative;
+    height: 100vh;
+    text-align: center;
+}
+h1 {
+    padding-top: 15px;
+    font-family: sans-serif;
+    text-transform: uppercase;
+    color: rgb(184, 86, 29);
+    cursor: pointer;
+}
+a {
+    text-decoration: none;
+}
+.buttons {
+    border:none;
+    border-radius: 20px;
+    background-color: rgb(253, 191, 115);
+    color: rgb(255, 255, 255);
+    text-transform: uppercase;
+    font-weight: bold;
+    outline: none;
+    cursor: pointer;
+}
+.start-button {
+    transition: background-color 0.2s ease-out;
+    font-size: 17px;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+}
+.buttons:hover { 
+    background-color: rgb(204, 156, 98);
+    transition: 0.2s;
+}
+.backdrop {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10;
+}
+.backdrop.visible {
+    display: block;
+}
+.form {
+    display:none;
+    position: absolute;
+    top: 20%;
+    left: 28%;
+    z-index: 100;
+    background-color: #fff;
+    border-radius: 25px;
+}
+.form.visible {
+    display: block;
+}
+form p { 
+    color: rgb(211, 158, 121);
+    font-size: 20px;
+    margin: 10px 20px 0 20px;
+}
+.btns {
+    text-align: end;
+    padding: 0 10px 10px 0;
+}
+.btns button {
+    padding: 3px 7px;
+    margin: 0 5px;
+    font-size: 12px;
+}
+.d-flex {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+.labels {
+    margin-right: 5px;
+    color: rgb(136, 119, 119);
+    font-weight: bold;
+    font-size: 17px;
+    text-align: end;
+}
+.inputs input {
+    padding: 1px 3px;
+    width: 50px;
+    outline: none;
+}
+.inputs:first-child {
+    margin-bottom: 5px;
+}
+.game-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+.minesweep-box {
+    background-color: #bdbdbd;
+    border-bottom: 2px solid #7b7b7b;
+    border-right: 2px solid #7b7b7b;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    padding: 5px;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px;
+    margin-bottom: 5px;
+}
+.header div:first-child,
+.header div:last-child{
+    width: 40px;
+    height: 25px;
+    background: rgb(241, 241, 241);
+    font-family: monospace;
+    font-size: 25px;
+}
+.header div:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    font-weight: 900;
+}
+.header div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: red;
+    font-weight: 900;
+}
+.header .emoji-happy {
+    background-image: url('emoji.png');
+}
+.header .emoji-sad {
+    background-image: url('emoji-sad.png');
+}
+.header .emoji-click {
+    background-image: url('emoji-click.png');
+    background-position: contain;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.header .emoji-win {
+    background-image: url('emoji-win.png');
+    background-position: contain;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+#refresh-btn {
+    width:25px;
+    height: 25px;
+    border-bottom: 2px solid #7b7b7b;
+    border-right: 2px solid #7b7b7b;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    cursor: pointer;
+}
+.border {
+    border-top: 2px solid #7b7b7b;
+    border-left: 2px solid #7b7b7b;
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
+}
+.row {
+    display: flex;
+}
+.slot {
+    width: 17px;
+    height: 17px;
+    background-color: transparent;
+    border-bottom: 2px solid #7b7b7b;
+    border-right: 2px solid #7b7b7b;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.slot.bomb-red {
+    background-image: url('bomb-red.png');
+    border:1px solid #7b7b7b;
+}
+.slot.empty-slot {
+    width: 17px;
+    height: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border:1px solid #7b7b7b;
+}
+.slot.bomb-slot {
+    background-image: url('bomb.png');
+    background-size: cover;
+    border:1px solid #7b7b7b;
+}
+.slot.wrong-bomb {
+    background-image: url('wrong-bomb.png');
+    background-size: cover;
+    border:1px solid #7b7b7b;
+}
+.slot.flag-slot {
+    background-image: url('flag1.png');
+    background-size: cover;
+}
+.slot.number-1 {
+    color: #0100FE;
+    border:1px solid #7b7b7b;
+    font-size: 15px;
+    font-weight: bold;
+    font-family:monospace;
+}
+.slot.number-2 {
+    color: #017F01;
+    border:1px solid #7b7b7b;
+    font-size: 15px;
+    font-weight: bold;
+    font-family:monospace;
+}
+.slot.number-3 {
+    color: #FE0000;
+    border:1px solid #7b7b7b;
+    font-size: 15px;
+    font-weight: bold;
+    font-family:monospace;
+}
+.slot.number-4 {
+    color: #010080;
+    border:1px solid #7b7b7b;
+    font-size: 15px;
+    font-weight: bold;
+    font-family:monospace;
+}
+.slot.number-5 {
+    color: #810102;
+    border:1px solid #7b7b7b;
+    font-size: 15px;
+    font-weight: bold;
+    font-family:monospace;
+}
+.slot.number-6 {
+    color: #008081;
+    border:1px solid #7b7b7b;
+    font-size: 15px;
+    font-weight: bold;
+    font-family:monospace;
+}
+.slot.number-7 {
+    color: #0100FE;
+    border:1px solid #7b7b7b;
+    font-size: 15px;
+    font-weight: bold;
+    font-family:monospace;
+}
+.slot.number-8 {
+    color: #000000;
+    border:1px solid #808080;
+    font-size: 15px;
+    font-weight: bold;
+    font-family:monospace;
+}
