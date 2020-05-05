@@ -145,19 +145,19 @@ form p {
     font-weight: 900;
 }
 .header .emoji-happy {
-    background-image: url('emoji.png');
+    background-image: url('images/emoji.png');
 }
 .header .emoji-sad {
-    background-image: url('emoji-sad.png');
+    background-image: url('images/emoji-sad.png');
 }
 .header .emoji-click {
-    background-image: url('emoji-click.png');
+    background-image: url('images/emoji-click.png');
     background-position: contain;
     background-repeat: no-repeat;
     background-size: contain;
 }
 .header .emoji-win {
-    background-image: url('emoji-win.png');
+    background-image: url('images/emoji-win.png');
     background-position: contain;
     background-repeat: no-repeat;
     background-size: contain;
@@ -193,7 +193,7 @@ form p {
     justify-content: center;
 }
 .slot.bomb-red {
-    background-image: url('bomb-red.png');
+    background-image: url('images/bomb-red.png');
     border:1px solid #7b7b7b;
 }
 .slot.empty-slot {
@@ -206,17 +206,17 @@ form p {
     border:1px solid #7b7b7b;
 }
 .slot.bomb-slot {
-    background-image: url('bomb.png');
+    background-image: url('images/bomb.png');
     background-size: cover;
     border:1px solid #7b7b7b;
 }
 .slot.wrong-bomb {
-    background-image: url('wrong-bomb.png');
+    background-image: url('images/wrong-bomb.png');
     background-size: cover;
     border:1px solid #7b7b7b;
 }
 .slot.flag-slot {
-    background-image: url('flag1.png');
+    background-image: url('images/flag1.png');
     background-size: cover;
 }
 .slot.number-1 {
