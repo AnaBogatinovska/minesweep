@@ -4,6 +4,7 @@ const $form = document.getElementById("form-numbers");
 const $backdrop = document.getElementById("backdrop-id");
 const $newGameBtn = document.getElementById("new-game-btn");
 const $cancelBtn = document.getElementById("cancel-btn");
+
 const $refreshGameBtn = document.getElementById("refresh-btn");
 const $slotContainer = document.getElementById("slots-container");
 const $bombRemaining = document.getElementById("bomb-remaining");
@@ -38,13 +39,12 @@ class Game {
   inputBombs = 10;
   gameOver = false;
   gameWon = false;
-  timeCounter = 0;
   gameSlots = [];
-  timerIntervalId = null;
+  timer = new Timer();
 
   startGame() {
     this.refreshGame();
-    timer.renderTimer();
+    this.timer.resetTimer();
     this.initializeBoard();
     this.initializeBombs();
     this.initializeNumbers();
@@ -63,7 +63,7 @@ class Game {
   }
 
   // == INITIALIZING GAME
-  initializeBoard(rows, cols) {
+  initializeBoard() {
     this.gameOver = false;
     this.gameSlots = [];
 
@@ -78,13 +78,21 @@ class Game {
   initializeBombs() {
     let i = 0;
     while (i < this.inputBombs) {
-      const randomIndex = Math.floor(
-        Math.random() * (this.inputRows * this.inputCols)
-      );
+      const randomIndex = Math.floor(Math.random() * this.gameSlots.length);
       this.gameSlots[randomIndex].type = BOMB;
       const filterSlots = this.gameSlots.filter((slot) => slot.type === BOMB);
       i = filterSlots.length;
     }
+  }
+
+  countBombsForNeighbour(x, y, bNum) {
+    const slotIndex = y - 1 + this.inputCols * (x - 1);
+    let neighbourSlot = this.gameSlots[slotIndex];
+
+    if (neighbourSlot.type === BOMB) {
+      bNum++;
+    }
+    return bNum;
   }
 
   initializeNumbers() {
@@ -99,74 +107,45 @@ class Game {
       let bombNum = 0;
 
       // Neighbourd: (x, y-1) --1
+
       if (y - 1 > 0) {
-        const slotIndex = y - 2 + cols * (x - 1);
-        let neighbourSlot = this.gameSlots[slotIndex];
-        if (neighbourSlot.type === BOMB) {
-          bombNum++;
-        }
+        bombNum = this.countBombsForNeighbour(x, y - 1, bombNum);
       }
+
       // Neighbourd: (x, y+1) --2
+
       if (y + 1 <= cols) {
-        const slotIndex = y + cols * (x - 1);
-        let neighbourSlot = this.gameSlots[slotIndex];
-        if (neighbourSlot.type === BOMB) {
-          bombNum++;
-        }
+        bombNum = this.countBombsForNeighbour(x, y + 1, bombNum);
       }
 
       // Neighbourd: (x-1, y-1) --3
       if (x - 1 > 0 && y - 1 > 0) {
-        const slotIndex = y - 2 + cols * (x - 2);
-        let neighbourSlot = this.gameSlots[slotIndex];
-        if (neighbourSlot.type === BOMB) {
-          bombNum++;
-        }
+        bombNum = this.countBombsForNeighbour(x - 1, y - 1, bombNum);
       }
 
       // Neighbourd: (x-1, y) --4
       if (x - 1 > 0) {
-        const slotIndex = y - 1 + cols * (x - 2);
-        let neighbourSlot = this.gameSlots[slotIndex];
-        if (neighbourSlot.type === BOMB) {
-          bombNum++;
-        }
+        bombNum = this.countBombsForNeighbour(x - 1, y, bombNum);
       }
 
       // Neighbourd: (x-1, y+1) --5
       if (x - 1 > 0 && y + 1 <= cols) {
-        const slotIndex = y + cols * (x - 2);
-        let neighbourSlot = this.gameSlots[slotIndex];
-        if (neighbourSlot.type === BOMB) {
-          bombNum++;
-        }
+        bombNum = this.countBombsForNeighbour(x - 1, y + 1, bombNum);
       }
 
       // Neighbourd: (x+1, y-1) --6
       if (x + 1 <= rows && y - 1 > 0) {
-        const slotIndex = y - 2 + cols * x;
-        let neighbourSlot = this.gameSlots[slotIndex];
-        if (neighbourSlot.type === BOMB) {
-          bombNum++;
-        }
+        bombNum = this.countBombsForNeighbour(x + 1, y - 1, bombNum);
       }
 
       // Neighbourd: (x+1, y) --7
       if (x + 1 <= rows) {
-        const slotIndex = y - 1 + cols * x;
-        let neighbourSlot = this.gameSlots[slotIndex];
-        if (neighbourSlot.type === BOMB) {
-          bombNum++;
-        }
+        bombNum = this.countBombsForNeighbour(x + 1, y, bombNum);
       }
 
       // Neighbourd: (x+1, y+1) --8
       if (x + 1 <= rows && y + 1 <= cols) {
-        const slotIndex = y + cols * x;
-        let neighbourSlot = this.gameSlots[slotIndex];
-        if (neighbourSlot.type === BOMB) {
-          bombNum++;
-        }
+        bombNum = this.countBombsForNeighbour(x + 1, y + 1, bombNum);
       }
 
       if (bombNum > 0) {
@@ -191,6 +170,7 @@ class Game {
         const slotIndex = j - 1 + this.inputCols * (i - 1);
         const slot = this.gameSlots[slotIndex];
         const $slot = document.createElement("div");
+
         $slot.className = "slot";
         $row.appendChild($slot);
 
@@ -201,6 +181,7 @@ class Game {
             $refreshGameBtn.classList.add("emoji-click");
           }
         });
+
         $slot.addEventListener("mouseup", (event) => {
           event.preventDefault();
 
@@ -210,6 +191,7 @@ class Game {
             $refreshGameBtn.classList.add("emoji-happy");
           }
         });
+
         if (slot.type === BOMB && slot.status === VISIBLE && !slot.flag) {
           $slot.classList.add("bomb-slot");
         }
@@ -217,6 +199,7 @@ class Game {
         if (slot.type === NUMBER && slot.status === VISIBLE) {
           let number = slot.bombCount;
           $slot.innerHTML = number;
+
           switch (number) {
             case 1:
               $slot.classList.add("number-1");
@@ -245,6 +228,7 @@ class Game {
             default:
           }
         }
+
         if (slot.type === EMPTY && slot.status === VISIBLE) {
           $slot.classList.add("empty-slot");
         }
@@ -376,7 +360,7 @@ class Game {
 
   gameOverEnd() {
     this.gameOver = true;
-    timer.stopTimer();
+    this.timer.stopTimer();
   }
 
   slotClickHandler(slot, event) {
@@ -408,8 +392,8 @@ class Game {
         this.countRemainingBombs();
       }
     }
-    if (!this.gameOver && this.timerIntervalId === null) {
-      timer.startTimer();
+    if (!this.gameOver && this.timer.timerIntervalId === null) {
+      this.timer.startTimer();
     }
     //check wrong bomb
     if (this.gameOver) {
@@ -429,7 +413,7 @@ class Game {
       filterFlagSlots.length === this.inputBombs
     ) {
       this.gameWon = true;
-      timer.stopTimer();
+      this.timer.stopTimer();
     }
 
     this.renderBoard();
@@ -447,9 +431,9 @@ class Game {
     this.inputBombs = parseInt(userInputs[2].value.trim());
 
     if (
-      this.inputRows === "" ||
-      this.inputCols === "" ||
-      this.inputBombs === ""
+      !this.inputRows  ||
+      !this.inputCols  ||
+      !this.inputBombs 
     ) {
       return alert("Please enter a number");
     }
@@ -473,33 +457,35 @@ class Game {
 } // end GAME class
 
 class Timer {
+  timeCounter = 0;
+  timerIntervalId = null;
+
   startTimer() {
-    game.timerIntervalId = setInterval(() => {
-      game.timeCounter++;
+    this.timerIntervalId = setInterval(() => {
+      this.timeCounter++;
       this.renderTimer();
     }, 1000);
   }
 
   resetTimer() {
     this.stopTimer();
-    game.timeCounter = 0;
+    this.timeCounter = 0;
     this.renderTimer();
   }
 
   stopTimer() {
-    if (game.timerIntervalId != null) {
-      clearInterval(game.timerIntervalId);
-      game.timerIntervalId = null;
+    if (this.timerIntervalId != null) {
+      clearInterval(this.timerIntervalId);
+      this.timerIntervalId = null;
     }
   }
 
   renderTimer() {
-    $timeCount.innerHTML = game.timeCounter;
+    $timeCount.innerHTML = this.timeCounter;
   }
 }
 
 let game = new Game();
-let timer = new Timer();
 game.startGame();
 
 $startBtn.addEventListener("click", (event) => {
@@ -523,7 +509,7 @@ $slotContainer.addEventListener("contextmenu", (event) => {
 });
 
 $refreshGameBtn.addEventListener("click", () => {
-  timer.stopTimer();
-  timer.resetTimer();
+  // timer.stopTimer();
+  // timer.resetTimer();
   game.startGame();
 });
