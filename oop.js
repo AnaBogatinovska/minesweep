@@ -1,14 +1,18 @@
 "use strict";
 const $startBtn = document.getElementById("start-btn");
+// const $newGameBtn = document.getElementById("new-game-btn");
+const $cancelBtn = document.getElementById("cancel-btn");
+// const $refreshGameBtn = document.getElementById("refresh-btn");
+
 const $form = document.getElementById("form-numbers");
 const $backdrop = document.getElementById("backdrop-id");
-const $newGameBtn = document.getElementById("new-game-btn");
-const $cancelBtn = document.getElementById("cancel-btn");
+const $userInputs = document.querySelectorAll("input");
+// const $minesweepBox = document.querySelectorAll("minesweep-box");
 
-const $refreshGameBtn = document.getElementById("refresh-btn");
-const $slotContainer = document.getElementById("slots-container");
-const $bombRemaining = document.getElementById("bomb-remaining");
-const $timeCount = document.getElementById("time");
+const $gameContainer = document.getElementById("game-container");
+// const $slotContainer = document.getElementById("slots-container");
+// const $bombRemaining = document.getElementById("bomb-remaining");
+// const $timeCount = document.getElementById("time");
 
 const EMPTY = "empty";
 const BOMB = "bomb";
@@ -17,8 +21,7 @@ const HIDDEN = "hidden";
 const VISIBLE = "visible";
 const EXPLODE = "explode";
 
-const $userInputs = document.querySelectorAll("input");
-const userInputs = Array.from($userInputs);
+const gameBoards = [];
 
 class Slot {
   status = HIDDEN;
@@ -40,26 +43,37 @@ class Game {
   gameOver = false;
   gameWon = false;
   gameSlots = [];
+  $refreshGameBtn = null;
+  $slotContainer = null;
+  $headerBox = null;
+  $bombRemaining = null;
+
   timer = new Timer();
 
+constructor(inputRows, inputCols, inputBombs) {
+  this.inputRows = inputRows;
+  this.inputCols = inputCols;
+  this.inputBombs = inputBombs;
+}
+
   startGame() {
+    this.renderGame();
     this.refreshGame();
     this.timer.resetTimer();
     this.initializeBoard();
     this.initializeBombs();
     this.initializeNumbers();
     this.countRemainingBombs();
-    this.renderBoard();
+    this.renderSlots();
   }
 
   refreshGame() {
     if (this.gameWon) {
       this.gameWon = false;
-      $refreshGameBtn.classList.remove("emoji-win");
-      $refreshGameBtn.classList.add("emoji-happy");
+      this.$refreshGameBtn.classList.add("emoji-happy");
     }
-    $refreshGameBtn.classList.remove("emoji-sad");
-    $refreshGameBtn.classList.add("emoji-happy");
+    this.$refreshGameBtn.classList.remove("emoji-sad");
+    this.$refreshGameBtn.classList.add("emoji-happy");
   }
 
   // == INITIALIZING GAME
@@ -157,28 +171,77 @@ class Game {
     }
   }
 
-  // == RENDERING GAME
-  renderBoard() {
-    $slotContainer.innerHTML = "";
+  renderGame() {
+    const $minesweepBox = document.createElement("div");
+    $minesweepBox.className = "minesweep-box";
+    $minesweepBox.id = "minesweep-box";
+    $gameContainer.appendChild($minesweepBox);
+
+    // mineSweepBox start
+    this.$headerBox = document.createElement("div");
+    this.$headerBox.className = "header border";
+    this.$headerBox.id = "header-box";
+    $minesweepBox.appendChild(this.$headerBox);
+
+    //header-box childs
+    this.$bombRemaining = document.createElement("div");
+    this.$bombRemaining.id = "bomb-remaining";
+    this.$headerBox.appendChild(this.$bombRemaining);
+
+    this.$refreshGameBtn = document.createElement("div");
+    this.$refreshGameBtn.className = "emoji-happy";
+    this.$refreshGameBtn.id = "refresh-btn";
+    this.$headerBox.appendChild(this.$refreshGameBtn);
+
+    let $timeCount = document.createElement("div");
+    this.timer.setTimerCounter($timeCount);
+    $timeCount.id = "time";
+    this.$headerBox.appendChild($timeCount);
+    //header-box childs end
+
+    this.$slotContainer = document.createElement("div");
+    this.$slotContainer.className = "border";
+    this.$slotContainer.id = "slots-container";
+    $minesweepBox.appendChild(this.$slotContainer);
+    //mineSweepBox end
+
+    this.$refreshGameBtn.addEventListener("click", () => {
+      this.refreshGame();
+      this.timer.resetTimer();
+      this.initializeBoard();
+      this.initializeBombs();
+      this.initializeNumbers();
+      this.countRemainingBombs();
+      this.renderSlots();
+    });
+
+    this.$slotContainer.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      return false;
+    });
+  }
+
+  // == RENDERING SLOTS
+  renderSlots() {
+    this.$slotContainer.innerHTML = "";
 
     for (let i = 1; i <= this.inputRows; i++) {
       const $row = document.createElement("div");
       $row.className = "row";
-      $slotContainer.appendChild($row);
+      this.$slotContainer.appendChild($row);
 
       for (let j = 1; j <= this.inputCols; j++) {
         const slotIndex = j - 1 + this.inputCols * (i - 1);
         const slot = this.gameSlots[slotIndex];
         const $slot = document.createElement("div");
-
         $slot.className = "slot";
         $row.appendChild($slot);
 
         $slot.addEventListener("mousedown", (event) => {
           event.preventDefault();
           if (!this.gameOver) {
-            $refreshGameBtn.classList.remove("emoji-happy");
-            $refreshGameBtn.classList.add("emoji-click");
+            this.$refreshGameBtn.classList.remove("emoji-happy");
+            this.$refreshGameBtn.classList.add("emoji-click");
           }
         });
 
@@ -187,8 +250,8 @@ class Game {
 
           if (!this.gameOver) {
             this.slotClickHandler(slot, event);
-            $refreshGameBtn.classList.remove("emoji-click");
-            $refreshGameBtn.classList.add("emoji-happy");
+            this.$refreshGameBtn.classList.remove("emoji-click");
+            this.$refreshGameBtn.classList.add("emoji-happy");
           }
         });
 
@@ -248,22 +311,22 @@ class Game {
       }
 
       if (this.gameWon) {
-        $bombRemaining.innerHTML = "";
-        $bombRemaining.innerHTML = "WIN";
-        $refreshGameBtn.classList.remove("emoji-happy");
-        $refreshGameBtn.classList.add("emoji-win");
+        this.$bombRemaining.innerHTML = "";
+        this.$bombRemaining.innerHTML = "WIN";
+        this.$refreshGameBtn.classList.remove("emoji-happy");
+        this.$refreshGameBtn.classList.add("emoji-win");
       }
       if (this.gameOver) {
-        $bombRemaining.innerHTML = "";
-        $bombRemaining.innerHTML = "LOST";
-        $refreshGameBtn.classList.remove("emoji-happy");
-        $refreshGameBtn.classList.add("emoji-sad");
+        this.$bombRemaining.innerHTML = "";
+        this.$bombRemaining.innerHTML = "LOST";
+        this.$refreshGameBtn.classList.remove("emoji-happy");
+        this.$refreshGameBtn.classList.add("emoji-sad");
       }
     }
-  } // ---> end of renderBoard !
+  } // ---> end of renderSlots !
 
   renderBombRemaining(remainingBombs) {
-    $bombRemaining.innerHTML = remainingBombs;
+    this.$bombRemaining.innerHTML = remainingBombs;
   }
 
   countRemainingBombs() {
@@ -393,6 +456,8 @@ class Game {
       }
     }
     if (!this.gameOver && this.timer.timerIntervalId === null) {
+      this.timer.timeCounter = 1;
+      this.timer.renderTimer();
       this.timer.startTimer();
     }
     //check wrong bomb
@@ -416,49 +481,14 @@ class Game {
       this.timer.stopTimer();
     }
 
-    this.renderBoard();
-  }
-
-  clearInputs() {
-    userInputs[0].value = "";
-    userInputs[1].value = "";
-    userInputs[2].value = "";
-  }
-
-  newGameBtnHandler() {
-    this.inputRows = parseInt(userInputs[0].value.trim());
-    this.inputCols = parseInt(userInputs[1].value.trim());
-    this.inputBombs = parseInt(userInputs[2].value.trim());
-
-    if (
-      !this.inputRows  ||
-      !this.inputCols  ||
-      !this.inputBombs 
-    ) {
-      return alert("Please enter a number");
-    }
-    this.startGame();
-    this.toggleForm();
-    this.clearInputs();
-  } //---->> end of newGameBtnHandler
-
-  startBtnHandler() {
-    $form.classList.toggle("visible");
-  }
-
-  backdropHandler() {
-    $backdrop.classList.toggle("visible");
-  }
-
-  toggleForm() {
-    this.startBtnHandler();
-    this.backdropHandler();
+    this.renderSlots();
   }
 } // end GAME class
 
 class Timer {
   timeCounter = 0;
   timerIntervalId = null;
+  $timeCount = null;
 
   startTimer() {
     this.timerIntervalId = setInterval(() => {
@@ -480,36 +510,64 @@ class Timer {
     }
   }
 
+  setTimerCounter(timeCount) {
+    this.$timeCount = timeCount;
+  }
+
   renderTimer() {
-    $timeCount.innerHTML = this.timeCounter;
+    this.$timeCount.innerHTML = this.timeCounter;
   }
 }
 
-let game = new Game();
-game.startGame();
+// let game = new Game();
+// game.startGame();
+// console.log(game);
+
+function clearInputs() {
+  $userInputs[0].value = "";
+  $userInputs[1].value = "";
+  $userInputs[2].value = "";
+}
+
+function newGameBtnHandler() {
+  const inputRows = parseInt($userInputs[0].value.trim());
+  const inputCols = parseInt($userInputs[1].value.trim());
+  const inputBombs = parseInt($userInputs[2].value.trim());
+
+  if (!inputRows || !inputCols || !inputBombs) {
+    return alert("Please enter a number");
+  }
+  let game = new Game(inputRows, inputCols, inputBombs);
+  gameBoards.push(game);
+  game.startGame();
+  toggleForm();
+  clearInputs();
+} //---->> end of newGameBtnHandler
+
+function startBtnHandler() {
+  $form.classList.toggle("visible");
+}
+
+function backdropHandler() {
+  $backdrop.classList.toggle("visible");
+}
+
+function toggleForm() {
+  startBtnHandler();
+  backdropHandler();
+}
 
 $startBtn.addEventListener("click", (event) => {
-  game.toggleForm();
+  toggleForm();
 });
 $backdrop.addEventListener("click", (event) => {
-  game.toggleForm();
+  toggleForm();
 });
 $cancelBtn.addEventListener("click", (event) => {
   event.preventDefault();
-  game.toggleForm();
+  toggleForm();
 });
 $form.addEventListener("submit", (event) => {
   event.preventDefault();
-  game.newGameBtnHandler();
-});
-
-$slotContainer.addEventListener("contextmenu", (event) => {
-  event.preventDefault();
-  return false;
-});
-
-$refreshGameBtn.addEventListener("click", () => {
-  // timer.stopTimer();
-  // timer.resetTimer();
-  game.startGame();
+  newGameBtnHandler();
 });
