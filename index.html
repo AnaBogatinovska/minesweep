@@ -11,6 +11,7 @@
     <div class="wrapper">
         <div class="container">
             <h1>Minesweeper</h1>
+            <button id="clear-btn" class="start-button buttons">Clear</button>
             <button id="start-btn" class="start-button buttons">New Game</button>
             <div id="backdrop-id" class="backdrop"></div>
             <div id="form-numbers" class="form">
@@ -34,15 +35,7 @@
                     </div>
                 </form>
             </div>
-            <div class="game-container">
-                <div class="minesweep-box">
-                    <div class="header border">
-                        <div id="bomb-remaining"></div>
-                        <div id="refresh-btn" class="emoji-happy"></div>
-                        <div><span id="time"></span></div>
-                    </div>
-                    <div id="slots-container" class="border"></div>
-                </div>
+            <div class="game-container" id="game-container">
             </div>
         </div>
     </div>

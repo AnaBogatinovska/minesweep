@@ -1,18 +1,12 @@
 "use strict";
 const $startBtn = document.getElementById("start-btn");
-// const $newGameBtn = document.getElementById("new-game-btn");
 const $cancelBtn = document.getElementById("cancel-btn");
-// const $refreshGameBtn = document.getElementById("refresh-btn");
+const $clearBtn = document.getElementById("clear-btn");
 
 const $form = document.getElementById("form-numbers");
 const $backdrop = document.getElementById("backdrop-id");
 const $userInputs = document.querySelectorAll("input");
-// const $minesweepBox = document.querySelectorAll("minesweep-box");
-
 const $gameContainer = document.getElementById("game-container");
-// const $slotContainer = document.getElementById("slots-container");
-// const $bombRemaining = document.getElementById("bomb-remaining");
-// const $timeCount = document.getElementById("time");
 
 const EMPTY = "empty";
 const BOMB = "bomb";
@@ -20,8 +14,6 @@ const NUMBER = "number";
 const HIDDEN = "hidden";
 const VISIBLE = "visible";
 const EXPLODE = "explode";
-
-const gameBoards = [];
 
 class Slot {
   status = HIDDEN;
@@ -47,14 +39,13 @@ class Game {
   $slotContainer = null;
   $headerBox = null;
   $bombRemaining = null;
-
   timer = new Timer();
 
-constructor(inputRows, inputCols, inputBombs) {
-  this.inputRows = inputRows;
-  this.inputCols = inputCols;
-  this.inputBombs = inputBombs;
-}
+  constructor(inputRows, inputCols, inputBombs) {
+    this.inputRows = inputRows;
+    this.inputCols = inputCols;
+    this.inputBombs = inputBombs;
+  }
 
   startGame() {
     this.renderGame();
@@ -519,17 +510,20 @@ class Timer {
   }
 }
 
-// let game = new Game();
-// game.startGame();
-// console.log(game);
+class Minesweeper {
+  gameBoards = [];
+  addGame(game) {
+    this.gameBoards.push(game);
+  }
+}
 
-function clearInputs() {
+const clearInputs = () => {
   $userInputs[0].value = "";
   $userInputs[1].value = "";
   $userInputs[2].value = "";
-}
+};
 
-function newGameBtnHandler() {
+const newGameBtnHandler = () => {
   const inputRows = parseInt($userInputs[0].value.trim());
   const inputCols = parseInt($userInputs[1].value.trim());
   const inputBombs = parseInt($userInputs[2].value.trim());
@@ -537,32 +531,30 @@ function newGameBtnHandler() {
   if (!inputRows || !inputCols || !inputBombs) {
     return alert("Please enter a number");
   }
+
   let game = new Game(inputRows, inputCols, inputBombs);
-  gameBoards.push(game);
+  minesweep.addGame(game);
   game.startGame();
   toggleForm();
   clearInputs();
-} //---->> end of newGameBtnHandler
+}; 
 
-function startBtnHandler() {
+const startBtnHandler = () => {
   $form.classList.toggle("visible");
-}
+};
 
-function backdropHandler() {
+const backdropHandler = () => {
   $backdrop.classList.toggle("visible");
-}
+};
 
-function toggleForm() {
+const toggleForm = () => {
   startBtnHandler();
   backdropHandler();
-}
+};
 
-$startBtn.addEventListener("click", (event) => {
-  toggleForm();
-});
-$backdrop.addEventListener("click", (event) => {
-  toggleForm();
-});
+$startBtn.addEventListener("click", toggleForm);
+$backdrop.addEventListener("click", toggleForm);
+
 $cancelBtn.addEventListener("click", (event) => {
   event.preventDefault();
   toggleForm();
@@ -571,3 +563,19 @@ $form.addEventListener("submit", (event) => {
   event.preventDefault();
   newGameBtnHandler();
 });
+$clearBtn.addEventListener('click', () => {
+  localStorage.clear();
+});
+let minesweep = new Minesweeper();
+
+function localStorageCreateItem() {
+  localStorage.setItem("minesweep", minesweep.gameBoards);
+}
+
+function readValueLocalStorage() {
+  let games = localStorage.getItem("minesweep");
+  
+  $gameContainer.innerHTML = games;
+}
+localStorageCreateItem();
+readValueLocalStorage();
