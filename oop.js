@@ -1,7 +1,7 @@
 "use strict";
 const $startBtn = document.getElementById("start-btn");
 const $cancelBtn = document.getElementById("cancel-btn");
-const $clearBtn = document.getElementById("clear-btn");
+// const $clearBtn = document.getElementById("clear-btn");
 
 const $form = document.getElementById("form-numbers");
 const $backdrop = document.getElementById("backdrop-id");
@@ -563,19 +563,19 @@ $form.addEventListener("submit", (event) => {
   event.preventDefault();
   newGameBtnHandler();
 });
-$clearBtn.addEventListener('click', () => {
-  localStorage.clear();
-});
-let minesweep = new Minesweeper();
+// $clearBtn.addEventListener('click', () => {
+//   localStorage.clear();
+// });
+// let minesweep = new Minesweeper();
 
-function localStorageCreateItem() {
-  localStorage.setItem("minesweep", minesweep.gameBoards);
-}
+// function localStorageCreateItem() {
+//   localStorage.setItem("minesweep", minesweep.gameBoards);
+// }
 
-function readValueLocalStorage() {
-  let games = localStorage.getItem("minesweep");
+// function readValueLocalStorage() {
+//   let games = localStorage.getItem("minesweep");
   
-  $gameContainer.innerHTML = games;
-}
-localStorageCreateItem();
-readValueLocalStorage();
+//   $gameContainer.innerHTML = games;
+// }
+// localStorageCreateItem();
+// readValueLocalStorage();

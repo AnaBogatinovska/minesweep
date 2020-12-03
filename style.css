@@ -3,18 +3,15 @@
     padding: 0;
     box-sizing: border-box;
 }
-body {
-    height: 100%;
-    width: 100%;
-    background-color: rgb(241, 241, 241);
-}
 .wrapper {
     background-color: rgb(241, 241, 241);
+    height: 100vh;
 }
 .container {
     width: 1000px;
     margin: 0 auto;
     position:relative;
+    height: 100vh;
     text-align: center;
 }
 h1 {
@@ -44,7 +41,7 @@ a {
     padding: 0.5rem 1rem;
 }
 .buttons:hover { 
-    background-color: rgb(192, 114, 19);
+    background-color: rgb(204, 156, 98);
     transition: 0.2s;
 }
 .backdrop {
@@ -106,22 +103,18 @@ form p {
 .inputs:first-child {
     margin-bottom: 5px;
 }
- .game-container { 
-     text-align: center;
+.game-container {
     display: flex;
-    justify-content: center; 
-    flex-wrap: wrap;
+    justify-content: center;
     margin-top: 15px;
 }
 .minesweep-box {
-    height: 0%;
     background-color: #bdbdbd;
     border-bottom: 2px solid #7b7b7b;
     border-right: 2px solid #7b7b7b;
     border-top: 2px solid #fff;
     border-left: 2px solid #fff;
     padding: 5px;
-    margin: 0 5px 5px 5px;
 }
 .header {
     display: flex;
@@ -152,19 +145,19 @@ form p {
     font-weight: 900;
 }
 .header .emoji-happy {
-    background-image: url('images/emoji.png');
+    background-image: url('emoji.png');
 }
 .header .emoji-sad {
-    background-image: url('images/emoji-sad.png');
+    background-image: url('emoji-sad.png');
 }
 .header .emoji-click {
-    background-image: url('images/emoji-click.png');
+    background-image: url('emoji-click.png');
     background-position: contain;
     background-repeat: no-repeat;
     background-size: contain;
 }
 .header .emoji-win {
-    background-image: url('images/emoji-win.png');
+    background-image: url('emoji-win.png');
     background-position: contain;
     background-repeat: no-repeat;
     background-size: contain;
@@ -200,7 +193,7 @@ form p {
     justify-content: center;
 }
 .slot.bomb-red {
-    background-image: url('images/bomb-red.png');
+    background-image: url('bomb-red.png');
     border:1px solid #7b7b7b;
 }
 .slot.empty-slot {
@@ -213,17 +206,17 @@ form p {
     border:1px solid #7b7b7b;
 }
 .slot.bomb-slot {
-    background-image: url('images/bomb.png');
+    background-image: url('bomb.png');
     background-size: cover;
     border:1px solid #7b7b7b;
 }
 .slot.wrong-bomb {
-    background-image: url('images/wrong-bomb.png');
+    background-image: url('wrong-bomb.png');
     background-size: cover;
     border:1px solid #7b7b7b;
 }
 .slot.flag-slot {
-    background-image: url('images/flag1.png');
+    background-image: url('flag1.png');
     background-size: cover;
 }
 .slot.number-1 {
