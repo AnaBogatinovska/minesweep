@@ -533,7 +533,7 @@ const newGameBtnHandler = () => {
   }
 
   let game = new Game(inputRows, inputCols, inputBombs);
-  minesweep.addGame(game);
+  // minesweep.addGame(game);
   game.startGame();
   toggleForm();
   clearInputs();
