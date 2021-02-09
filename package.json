@@ -1,0 +1,21 @@
+{
+  "name": "minesweep",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "aws s3 sync --profile ana --delete src s3://minesweeper.anabogatinovska.com --acl public-read && npm run invalidate",
+    "invalidate": "aws cloudfront --profile ana create-invalidation --distribution-id E1VFV018M5V47S --paths \"/*\" --output json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnaBogatinovska/minesweep.git"
+  },
+  "author": "Ana Bogatinovska",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnaBogatinovska/minesweep/issues"
+  },
+  "homepage": "https://github.com/AnaBogatinovska/minesweep#readme"
+}
