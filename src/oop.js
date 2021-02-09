@@ -514,6 +514,7 @@ class Minesweeper {
   gameBoards = [];
   addGame(game) {
     this.gameBoards.push(game);
+    console.log(this.gameBoards)
   }
 }
 
@@ -533,7 +534,8 @@ const newGameBtnHandler = () => {
   }
 
   let game = new Game(inputRows, inputCols, inputBombs);
-  minesweep.addGame(game);
+  let minesweeper = new Minesweeper()
+  minesweeper.addGame(game);
   game.startGame();
   toggleForm();
   clearInputs();
