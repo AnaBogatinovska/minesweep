@@ -112,13 +112,11 @@ class Game {
       let bombNum = 0;
 
       // Neighbourd: (x, y-1) --1
-
       if (y - 1 > 0) {
         bombNum = this.countBombsForNeighbour(x, y - 1, bombNum);
       }
 
       // Neighbourd: (x, y+1) --2
-
       if (y + 1 <= cols) {
         bombNum = this.countBombsForNeighbour(x, y + 1, bombNum);
       }
